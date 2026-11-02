@@ -1,0 +1,16 @@
+# dependencies and build output
+node_modules/
+dist/
+
+# secrets (use .env.example as the template)
+.env
+.env.*
+!.env.example
+
+# user uploads (keep the folder itself)
+server/uploads/*
+!server/uploads/.gitkeep
+
+# logs and OS files
+*.log
+.DS_Store
