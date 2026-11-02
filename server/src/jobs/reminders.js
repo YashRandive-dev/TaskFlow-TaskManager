@@ -2,6 +2,7 @@ const cron = require('node-cron');
 const Task = require('../models/Task');
 const { notify } = require('../utils/notify');
 const { sendEmail } = require('../utils/email');
+const { escapeHtml } = require('../utils/helpers');
 
 const runReminders = async () => {
   const now = new Date();
@@ -24,7 +25,7 @@ const runReminders = async () => {
           to: u.email,
           subject: `Reminder: "${task.title}" is due soon`,
           title: 'Task due within 24 hours',
-          body: `Hi ${u.name}, <b>${task.title}</b> is due on ${task.dueDate.toLocaleString()}. You've got this! `,
+          body: `Hi ${escapeHtml(u.name)}, <b>${escapeHtml(task.title)}</b> is due on ${task.dueDate.toLocaleString()}. You've got this! `,
           cta: { url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/tasks?open=${task._id}`, label: 'Open task' },
         });
       }

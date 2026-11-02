@@ -13,7 +13,7 @@ const STATUS_LABEL = { todo: 'To Do', inprogress: 'In Progress', review: 'Review
 const POP = [
   { path: 'assignees', select: 'name email avatar' },
   { path: 'createdBy', select: 'name avatar' },
-  { path: 'project', select: 'name emoji color' },
+  { path: 'project', select: 'name color' },
 ];
 
 const accessFilter = async (userId) => {

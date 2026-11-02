@@ -5,6 +5,7 @@ const ActivityLog = require('../models/ActivityLog');
 const { ApiError, asyncHandler, send } = require('../utils/helpers');
 const { notify, logActivity } = require('../utils/notify');
 const { sendEmail } = require('../utils/email');
+const { escapeHtml } = require('../utils/helpers');
 const { emitToUsers, emitToProject, leaveProjectRoom, joinProjectRoom } = require('../sockets');
 
 const POP = [
@@ -44,9 +45,9 @@ exports.get = asyncHandler(async (req, res) => {
 });
 
 exports.create = asyncHandler(async (req, res) => {
-  const { name, description, emoji, color } = req.body;
+  const { name, description, color } = req.body;
   const project = await Project.create({
-    name, description, emoji: emoji || '', color: color || '#3B6EA8',
+    name, description, color: color || '#3B6EA8',
     owner: req.user._id, members: [{ user: req.user._id, role: 'Owner' }],
   });
   await logActivity({ user: req.user._id, action: `created project "${name}"`, entity: 'project', entityId: project._id, project: project._id });
@@ -56,7 +57,7 @@ exports.create = asyncHandler(async (req, res) => {
 
 exports.update = asyncHandler(async (req, res) => {
   const { project } = await load(req.params.id, req.user, 'Admin');
-  ['name', 'description', 'emoji', 'color'].forEach((k) => {
+  ['name', 'description', 'color'].forEach((k) => {
     if (req.body[k] !== undefined) project[k] = req.body[k];
   });
   await project.save();
@@ -76,7 +77,6 @@ exports.invite = asyncHandler(async (req, res) => {
   const email = String(req.body.email).toLowerCase().trim();
   const role = req.body.role === 'Admin' ? 'Admin' : 'Member';
   const target = await User.findOne({ email });
-  const link = `${process.env.CLIENT_URL || 'http://localhost:5173'}/projects/${project._id}`;
 
   if (target) {
     if (project.roleOf(target._id)) throw new ApiError(409, 'Already a member');
@@ -93,7 +93,7 @@ exports.invite = asyncHandler(async (req, res) => {
       to: email,
       subject: `${req.user.name} invited you to "${project.name}" on TaskFlow`,
       title: "You're invited!",
-      body: `${req.user.name} invited you to join the project <b>${project.name}</b>. Create a free account with this email address to join automatically.`,
+      body: `${escapeHtml(req.user.name)} invited you to join the project <b>${escapeHtml(project.name)}</b>. Create a free account with this email address to join automatically.`,
       cta: { url: `${process.env.CLIENT_URL || 'http://localhost:5173'}/register`, label: 'Join TaskFlow' },
     });
   }

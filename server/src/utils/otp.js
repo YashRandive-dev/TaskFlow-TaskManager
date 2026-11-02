@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const Otp = require('../models/Otp');
-const { ApiError, sha256 } = require('./helpers');
+const { ApiError, sha256, escapeHtml } = require('./helpers');
 const { sendEmail } = require('./email');
 
 const TTL_MIN = 10;
@@ -32,7 +32,7 @@ const sendOtp = async (email, purpose, name = '') => {
     to: email,
     subject: `${c.subject}: ${code}`,
     title: c.title,
-    body: `${name ? `Hi ${name}, ` : ''}${c.lead}<br/><br/><span style="font-size:30px;font-weight:700;letter-spacing:8px">${code}</span><br/><br/>This code expires in ${TTL_MIN} minutes. If you did not request it, you can ignore this email.`,
+    body: `${name ? `Hi ${escapeHtml(name)}, ` : ''}${c.lead}<br/><br/><span style="font-size:30px;font-weight:700;letter-spacing:8px">${code}</span><br/><br/>This code expires in ${TTL_MIN} minutes. If you did not request it, you can ignore this email.`,
     devNote: `OTP (${purpose}) for ${email}: ${code}`,
   });
 };

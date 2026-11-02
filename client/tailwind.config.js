@@ -9,7 +9,7 @@ export default {
         secondary: { DEFAULT: '#C8553D', 50: '#FBF0ED', 100: '#F6DDD7', 200: '#EDBBB0', 300: '#E09785', 400: '#D3745D', 500: '#C8553D', 600: '#A94430', 700: '#853627' },
         accent: { DEFAULT: '#3E9B73', 50: '#EDF7F2', 100: '#D3EDE1', 200: '#A8DAC3', 300: '#7EC8A6', 400: '#5BB38C', 500: '#3E9B73', 600: '#317C5C', 700: '#265F47' },
       },
-      fontFamily: { sans: ['Inter', 'Poppins', 'system-ui', 'sans-serif'] },
+      fontFamily: { sans: ['Poppins', 'Inter', 'system-ui', 'sans-serif'] },
       boxShadow: {
         glow: '0 10px 28px -10px rgba(59,110,168,.5)',
         'glow-coral': '0 10px 28px -10px rgba(200,85,61,.5)',

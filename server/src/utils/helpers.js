@@ -37,6 +37,8 @@ const clearAuthCookies = (res) => {
   res.clearCookie('refreshToken');
 };
 
+const escapeHtml = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
 const escapeRegex = (s) => String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 module.exports = {
@@ -49,4 +51,5 @@ module.exports = {
   setAuthCookies,
   clearAuthCookies,
   escapeRegex,
+  escapeHtml,
 };

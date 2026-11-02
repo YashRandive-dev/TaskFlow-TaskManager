@@ -31,6 +31,7 @@ exports.updateMe = asyncHandler(async (req, res) => {
   if (b.onboardingCompleted !== undefined) user.onboardingCompleted = b.onboardingCompleted === true || b.onboardingCompleted === 'true';
   if (b.categories) user.categories = parse(b.categories);
   if (b.savedFilters) user.savedFilters = typeof b.savedFilters === 'string' ? JSON.parse(b.savedFilters) : b.savedFilters;
+  if (req.file && !/^image\/(png|jpe?g|gif|webp|avif)$/.test(req.file.mimetype)) throw new ApiError(400, 'Profile photo must be a PNG, JPG, GIF or WebP image');
   if (req.file) user.avatar = (await storeFile(req.file, 'taskflow/avatars')).url;
   if (b.removeAvatar === 'true' || b.removeAvatar === true) user.avatar = '';
 

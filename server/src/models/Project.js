@@ -4,7 +4,6 @@ const projectSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true, maxlength: 80 },
     description: { type: String, default: '', maxlength: 500 },
-    emoji: { type: String, default: '' },
     color: { type: String, default: '#3B6EA8' },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     members: [

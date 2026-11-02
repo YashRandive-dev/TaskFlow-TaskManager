@@ -1,4 +1,4 @@
-# ✅ TaskFlow — MERN Task Manager
+# TaskFlow: MERN Task Manager
 
 Steel Blue `#3B6EA8` · Terracotta `#C8553D` · Sage `#3E9B73` on graphite neutrals
 
@@ -7,7 +7,7 @@ TaskManager/
 ├── server/                 Express + MongoDB API (JavaScript, CommonJS)
 │   └── src/
 │       ├── app.js · server.js          app setup, HTTP + Socket.io + cron boot
-│       ├── models/                     User, Project, Task, Comment, Notification, ActivityLog
+│       ├── models/                     User, Session, Otp, Project, Task, Comment, Notification, ActivityLog
 │       ├── controllers/                auth, user, task, project, misc (analytics + notifications)
 │       ├── routes/index.js             all REST routes + express-validator rules
 │       ├── middleware/index.js         protect (JWT), validate, notFound, errorHandler
@@ -82,4 +82,18 @@ npm run dev                 # http://localhost:5173  (proxies /api, /uploads, /s
 
 ## Rate limits
 Auth endpoints allow 40 requests per 15 minutes per IP by default. Set `AUTH_RATE_LIMIT` in `server/.env` to change it (useful for automated tests).
-# TaskManager
+
+## Deploying on Render
+The repository ships a `render.yaml` Blueprint. One web service builds the React app and serves it together with the API, so there is a single address (this avoids cross-site cookie problems).
+
+- Build command: `npm run build` · Start command: `npm start` · Health check: `/api/health`
+- Works with Root Directory empty or set to `server`; Node 20 is pinned in `package.json`.
+- Required environment variables: `NODE_ENV=production`, `MONGO_URI`, `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET`, `CLIENT_URL` (your Render address).
+- Optional: `SMTP_*` for real emails, `CLOUDINARY_*` for persistent uploads (Render's disk is wiped on every deploy).
+- MongoDB Atlas must allow Render's IPs (Network Access, for example `0.0.0.0/0`).
+
+## Security notes
+- Uploaded files are served with `nosniff` and a sandbox policy; only PNG/JPG/GIF/WebP render inline, everything else downloads.
+- Emails escape user-supplied text. Auth endpoints are rate limited; codes lock after 5 wrong attempts.
+- Never commit `server/.env`; use `server/.env.example` as the template.
+

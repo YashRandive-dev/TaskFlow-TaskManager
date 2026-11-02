@@ -46,7 +46,6 @@ const userSchema = new mongoose.Schema(
       website: { type: String, default: '', maxlength: 120 },
     },
     savedFilters: [{ name: String, filters: mongoose.Schema.Types.Mixed }],
-    refreshTokenHash: { type: String, select: false },
     resetPasswordToken: { type: String, select: false },
     resetPasswordExpire: { type: Date, select: false },
   },

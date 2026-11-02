@@ -39,7 +39,16 @@ app.use(cookieParser());
 app.use(mongoSanitize());
 app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, limit: 1000, standardHeaders: true, legacyHeaders: false }));
 
-app.use('/uploads', express.static(uploadDir));
+// Uploaded files come from users, so they must never run as pages/scripts on our origin:
+// only plain raster images render inline; everything else downloads. A sandbox CSP blocks scripts either way.
+const INLINE_IMAGE = /\.(png|jpe?g|gif|webp|avif)$/i;
+app.use('/uploads', express.static(uploadDir, {
+  setHeaders: (res, file) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Content-Security-Policy', "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox");
+    if (!INLINE_IMAGE.test(file)) res.setHeader('Content-Disposition', 'attachment');
+  },
+}));
 app.get('/api/health', (req, res) => res.json({ success: true, data: { uptime: process.uptime() }, message: 'TaskFlow API ' }));
 app.use('/api', routes);
 
