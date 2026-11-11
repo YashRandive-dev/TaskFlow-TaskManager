@@ -97,3 +97,4 @@ The repository ships a `render.yaml` Blueprint. One web service builds the React
 - Emails escape user-supplied text. Auth endpoints are rate limited; codes lock after 5 wrong attempts.
 - Never commit `server/.env`; use `server/.env.example` as the template.
 
+# TaskFlow-TaskManager
